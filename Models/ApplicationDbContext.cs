@@ -10,5 +10,5 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjectTask> ProjectTasks { get; set; }
-    public DbSet<User> Users { get; set; }
+    public new DbSet<User> Users { get; set; }
 }
