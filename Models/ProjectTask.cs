@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using TaskManager.Enums;
@@ -13,11 +14,12 @@ public class ProjectTask
     public int Priority { get; set; }
     public ProjectTaskStatus Status { get; set; } = ProjectTaskStatus.Pending;
 
+    // [NotMapped]
     public string UserId { get; set; }
 
     [JsonIgnore]
-    public IdentityUser User { get; set; }
+    public IdentityUser? User { get; set; }
     public int ProjectId { get; set; }
     [JsonIgnore]
-    public Project Project { get; set; }
+    public Project? Project { get; set; }
 }
