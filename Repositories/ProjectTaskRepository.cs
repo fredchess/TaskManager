@@ -7,20 +7,35 @@ using TaskManager.Requests;
 
 namespace TaskManager.Repositories
 {
-    public class ProjectTaskRepository : IRepository<ProjectTask, ProjectTaskParameters>
+    public class ProjectTaskRepository : IProjectTaskRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly string _userId;
 
-        public ProjectTaskRepository(ApplicationDbContext context, string userId)
+        public ProjectTaskRepository(ApplicationDbContext context)
         {
             _context = context;
-            _userId = userId;
         }
 
-        public async Task<IEnumerable<ProjectTask>> GetByQueryParams(ProjectTaskParameters parameters)
+        public async Task CreateTask(ProjectTask task)
         {
-            IQueryable<ProjectTask> tasks = _context.ProjectTasks.Where(task => task.UserId == _userId);
+            await _context.ProjectTasks.AddAsync(task);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTask(ProjectTask task)
+        {
+            _context.ProjectTasks.Remove(task);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<ProjectTask?> GetTask(int id, string userId)
+        {
+            return await _context.ProjectTasks.Where(t => t.Id == id && t.UserId == userId).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<ProjectTask>> GetTasks(ProjectTaskParameters parameters, string userId)
+        {
+            IQueryable<ProjectTask> tasks = _context.ProjectTasks;
 
             if (parameters.Statuses.Length != 0)
                 tasks = tasks.Where(task => parameters.Statuses.Contains(task.Status));
@@ -46,6 +61,12 @@ namespace TaskManager.Repositories
                     .ToListAsync();
 
             return datas;
+        }
+
+        public async Task UpdateTask(ProjectTask task, string userId)
+        {
+            _context.Entry(task).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

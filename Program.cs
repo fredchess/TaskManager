@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models;
+using TaskManager.Repositories;
+using TaskManager.Services;
 
 namespace TaskManager;
 
@@ -56,5 +58,8 @@ public class Program
         services.AddAuthorization();
         services.AddIdentityApiEndpoints<User>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
+        services.AddScoped<IProjectTaskService, ProjectTaskService>();
     }
 }
