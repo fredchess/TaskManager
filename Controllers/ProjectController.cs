@@ -37,25 +37,13 @@ namespace TaskManager.Controllers
             return Ok(project);
         }
 
-        [HttpGet("{id}/tasks")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int id)
-        {
-            var project = await _context.Projects.FindAsync(id);
-
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(project.ProjectTasks);
-        }
-
         [HttpPost]
         public async Task<ActionResult<Project>> Post([FromBody] CreateProjectSchema schema)
         {
 
             var project = await _context.Projects.AddAsync(new Project {
-                Title = schema.Title
+                Title = schema.Title,
+                Description = schema.Description,
             });
 
             await _context.SaveChangesAsync();

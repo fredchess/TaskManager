@@ -63,7 +63,7 @@ namespace TaskManager.Repositories
             return datas;
         }
 
-        public async Task UpdateTask(ProjectTask task, string userId)
+        public async Task UpdateTask(ProjectTask task)
         {
             _context.Entry(task).State = EntityState.Modified;
             await _context.SaveChangesAsync();

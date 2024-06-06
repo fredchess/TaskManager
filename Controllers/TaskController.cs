@@ -75,7 +75,7 @@ namespace TaskManager.Controllers
             if (task == null) return NotFound();
 
             try {
-                await _projectTaskService.UpdateTask(schema, userId);
+                await _projectTaskService.UpdateTask(schema, task);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -86,20 +86,15 @@ namespace TaskManager.Controllers
         }
 
         [HttpPut("{id}/complete")]
-        public async Task<ActionResult<ProjectTask>> CompleteTask(int id, [FromBody] UpdateProjectTaskSchema schema)
+        public async Task<ActionResult<ProjectTask>> CompleteTask(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (id != schema.Id)
-            {
-                return BadRequest();
-            }
 
             var task = await _projectTaskService.GetTaskById(id, userId);
 
             if (task == null) return NotFound();
 
-            if (task.DueDate > DateTime.UtcNow)
+            if (task.DueDate < DateTime.UtcNow)
                 return BadRequest("DueDate passed, cannot mark this task as completed");
 
             task.Status = ProjectTaskStatus.Completed;
@@ -124,7 +119,7 @@ namespace TaskManager.Controllers
 
             if (task == null) return NotFound();
 
-            _projectTaskService.DeleteTask(task);
+            await _projectTaskService.DeleteTask(task);
 
             return NoContent();
         }

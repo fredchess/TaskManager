@@ -45,9 +45,15 @@ namespace TaskManager.Services
             return await _repository.GetTasks(parameters, userId);
         }
 
-        public Task UpdateTask(UpdateProjectTaskSchema task, string userId)
+        public async Task UpdateTask(UpdateProjectTaskSchema schema, ProjectTask task)
         {
-            throw new NotImplementedException();
+            task.Title = schema.Title;
+            task.Description = schema.Description;
+            task.DueDate = schema.DueDate;
+            task.Priority = schema.Priority;
+            task.ProjectId = schema.ProjectId;
+
+            await _repository.UpdateTask(task);
         }
     }
 }

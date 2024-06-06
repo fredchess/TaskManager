@@ -6,7 +6,6 @@ namespace TaskManager.Requests
     {
         public ProjectTaskStatus[] Statuses { get; set; } = [];
         public int[] Priorities { get; set; } = [];
-        public int? Priority { get; set; }
         public DateTime? DueDate { get; set; }
     }
 }
