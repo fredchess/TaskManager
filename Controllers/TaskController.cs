@@ -16,7 +16,7 @@ using TaskManager.Services;
 namespace TaskManager.Controllers
 {
     [ApiController]
-    [Route("tasks")]
+    [Route("api/tasks")]
     [Authorize]
     public class TaskController : ControllerBase
     {

@@ -32,9 +32,11 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.MapIdentityApi<User>();
+        app.MapGroup("/api/auth").MapIdentityApi<User>();
 
         app.UseHttpsRedirection();
+
+        app.UseCors();
 
         app.UseAuthorization();
 
@@ -61,5 +63,14 @@ public class Program
 
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
         services.AddScoped<IProjectTaskService, ProjectTaskService>();
+        services.AddCors(options => {
+            options.AddDefaultPolicy(builder => {
+                builder
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+        });
     }
 }
