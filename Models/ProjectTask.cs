@@ -16,6 +16,7 @@ public class ProjectTask
     public DateTime DueDate { get; set; }
     [Sortable]
     public int Priority { get; set; }
+    [Sortable]
     public ProjectTaskStatus Status { get; set; } = ProjectTaskStatus.Pending;
 
     // [NotMapped]
