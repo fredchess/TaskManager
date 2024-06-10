@@ -63,6 +63,10 @@ public class Program
 
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
         services.AddScoped<IProjectTaskService, ProjectTaskService>();
+        services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
+
+
         services.AddCors(options => {
             options.AddDefaultPolicy(builder => {
                 builder

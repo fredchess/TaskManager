@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models;
+using TaskManager.Requests;
 using TaskManager.Schemas;
 using TaskManager.Schemas.Project;
+using TaskManager.Services;
 
 namespace TaskManager.Controllers
 {
@@ -13,28 +15,25 @@ namespace TaskManager.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public ProjectController(ApplicationDbContext context)
+        private readonly IProjectService _projectService;
+        public ProjectController(IProjectService projectService)
         {
-            _context = context;
+            _projectService = projectService;
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectSchema>>> Get()
+        public async Task<ActionResult<IEnumerable<ProjectSchema>>> Get([FromQuery] QueryParameters parameters)
         {
-            return await _context.Projects.Select(project => new ProjectSchema {
-                Id = project.Id,
-                Title = project.Title,
-                Description = project.Description,
-                TotalTasks = project.ProjectTasks.Count
-            }).ToListAsync();
+            var projects = await _projectService.GetProjects(parameters);
+
+            return Ok(projects);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Project>>> Get(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _projectService.GetById(id);
 
             if (project == null)
             {
@@ -45,25 +44,21 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet("{id}/tasks")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int id)
+        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int id, [FromQuery]ProjectTaskParameters parameters)
         {
-            return await _context.ProjectTasks
-                .Where(task => task.ProjectId == id && task.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
-                .ToListAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var tasks = await _projectService.GetProjectTasks(id, parameters, userId);
+
+            return Ok(tasks);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> Post([FromBody] CreateProjectSchema schema)
+        public async Task<ActionResult<ProjectSchema>> Post([FromBody] CreateProjectSchema schema)
         {
+            var project = await _projectService.AddProject(schema);
 
-            var project = await _context.Projects.AddAsync(new Project {
-                Title = schema.Title,
-                Description = schema.Description,
-            });
-
-            await _context.SaveChangesAsync();
-
-            return Ok(project.Entity);
+            return Ok(project);
         }
     }
 }
