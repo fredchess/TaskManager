@@ -44,11 +44,11 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet("{id}/tasks")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int id, [FromQuery]ProjectTaskParameters parameters)
+        public async Task<ActionResult<PaginatedSchema<ProjectTask>>> GetTasks(int id, [FromQuery]ProjectTaskParameters parameters)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var tasks = await _projectService.GetProjectTasks(id, parameters, userId);
+            var tasks = await _projectService.GetProjectTasksPaginated(id, parameters, userId);
 
             return Ok(tasks);
         }

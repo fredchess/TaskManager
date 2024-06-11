@@ -56,8 +56,22 @@ namespace TaskManager.Services
         public async Task<IEnumerable<ProjectTask>> GetProjectTasks(int projectId, ProjectTaskParameters parameters, string userId)
         {
             var tasks = await _projectRepository.GetProjectTasks(projectId, parameters, userId);
+            var total = await _projectRepository.GetToTalTasks(projectId, parameters, userId);
 
             return tasks;
+        }
+
+        public async Task<PaginatedSchema<ProjectTask>> GetProjectTasksPaginated(int projectId, ProjectTaskParameters parameters, string userId)
+        {
+            var tasks = await _projectRepository.GetProjectTasks(projectId, parameters, userId);
+            var total = await _projectRepository.GetToTalTasks(projectId, parameters, userId);
+
+            return new PaginatedSchema<ProjectTask>{
+                Datas = tasks,
+                Limit = parameters.Limit,
+                Page = parameters.Page,
+                TotalData = total
+            };
         }
     }
 }

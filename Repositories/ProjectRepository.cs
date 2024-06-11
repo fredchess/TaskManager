@@ -56,5 +56,14 @@ namespace TaskManager.Repositories
 
             return tasks;
         }
+
+        public async Task<int> GetToTalTasks(int projectId, ProjectTaskParameters parameters, string userId)
+        {
+            var total = await _context.ProjectTasks
+                .Where(task => task.ProjectId == projectId && task.UserId == userId)
+                .CountAsync();
+
+            return total;
+        }
     }
 }
