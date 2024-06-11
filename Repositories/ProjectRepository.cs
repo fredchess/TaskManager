@@ -22,6 +22,12 @@ namespace TaskManager.Repositories
             return data.Entity;
         }
 
+        public async Task DeleteProject(Project project)
+        {
+            _context.Remove(project);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Project?> GetById(int projectId)
         {
             var project = await _context.Projects.FindAsync(projectId);

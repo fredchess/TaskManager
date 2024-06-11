@@ -60,5 +60,20 @@ namespace TaskManager.Controllers
 
             return Ok(project);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var project = await _projectService.GetById(id);
+
+            if (project == null) 
+            {
+                return NotFound();
+            }
+
+            await _projectService.DeleteProject(project);
+
+            return Ok();
+        }
     }
 }

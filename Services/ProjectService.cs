@@ -31,6 +31,11 @@ namespace TaskManager.Services
             return dto;
         }
 
+        public async Task DeleteProject(Project project)
+        {
+            await _projectRepository.DeleteProject(project);
+        }
+
         public async Task<Project?> GetById(int projectId)
         {
             return await _projectRepository.GetById(projectId);

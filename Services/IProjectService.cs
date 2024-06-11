@@ -11,5 +11,6 @@ namespace TaskManager.Services
         Task<Project?> GetById(int projectId);
         Task<IEnumerable<ProjectTask>> GetProjectTasks(int projectId, ProjectTaskParameters parameters, string userId);
         Task<ProjectSchema> AddProject(CreateProjectSchema schema);
+        Task DeleteProject(Project project);
     }
 }

@@ -10,5 +10,6 @@ namespace TaskManager.Repositories
         Task<Project?> GetById(int projectId);
         Task<IEnumerable<ProjectTask>> GetProjectTasks(int projectId, ProjectTaskParameters parameters, string userId);
         Task<Project> AddProject(Project project);
+        Task DeleteProject(Project project);
     }
 }
