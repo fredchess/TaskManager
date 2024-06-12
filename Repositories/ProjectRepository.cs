@@ -61,6 +61,8 @@ namespace TaskManager.Repositories
         {
             var total = await _context.ProjectTasks
                 .Where(task => task.ProjectId == projectId && task.UserId == userId)
+                .SortBy(parameters)
+                .Filter(parameters)
                 .CountAsync();
 
             return total;
